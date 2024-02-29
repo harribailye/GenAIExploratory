@@ -11,7 +11,7 @@ import pyaudio
 
 # Set API key 
 client = OpenAI(
-    api_key="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",
+    api_key="",
 ) 
 
 # Define the System Role
