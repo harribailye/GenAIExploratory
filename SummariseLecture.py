@@ -5,17 +5,18 @@
 
 # Import libaries 
 from openai import OpenAI
+import moviepy.editor as mp
 import pandas as pd
 import speech_recognition as sr 
 import pyaudio
 
 # Set API key 
 client = OpenAI(
-    api_key="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",
+    api_key="",
 ) 
 
 # Define the System Role
-messages = [ {"role": "system", "content": "Your responses should summarise everything in one sentence."} ]
+messages = [ {"role": "system", "content": "Your response should summarise the meeting."} ]
 
 # Set up microphone to record audio prompt 
 recogniser = sr.Recognizer()
@@ -23,9 +24,17 @@ microphone = sr.Microphone(device_index= 0) # Change this according to your micr
 
 # Define audio file
 lecture_audio = 'Lecture.wav'
+lecture_video = 'LectureVideo.MP4'
+
+# MP4 to text 
+video = mp.VideoFileClip(lecture_video)
+audio = video.audio
+temp_audio_file = "temp.wav"
+audio.write_audiofile(temp_audio_file)
+
 
 # Convert audio file 
-with sr.AudioFile(lecture_audio) as source:
+with sr.AudioFile(temp_audio_file) as source:
     audio_data = recogniser.record(source)
     text = recogniser.recognize_google(audio_data)
     messages.append({"role": "user", "content": text}) 
