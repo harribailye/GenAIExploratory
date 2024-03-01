@@ -12,29 +12,22 @@ import os
 
 # Set API key 
 client = OpenAI(
-    api_key="",
+    api_key="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",
 ) 
 
-# Set up the System Role
-messages = [ {"role": "system", "content": "Summarise the meeting in one sentence."} ]
-
-# Set up microphone to record audio prompt 
-recogniser = sr.Recognizer()
-microphone = sr.Microphone(device_index= 0) # Change this according to your microphone
-
-# Get a list of files in current working directory 
+# Get a list of audio/video files in current working directory 
 current_dir = os.getcwd()
 files_and_dirs = os.listdir(current_dir)
+files = [file for file in files_and_dirs if (file.endswith('.mp4') or file.endswith('.wav')) and os.path.isfile(os.path.join(current_dir, file))]
 
-# Filter out only the mp4 and wav files
-files = [file for file in files_and_dirs if file.endswith('.mp4') or file.endswith('.wav') and os.path.isfile(os.path.join(current_dir, file))]
-
-
-
+print(files)
+'''
 # Audio to text function 
 def audio_2_text(temp_audio_file):
     recogniser = sr.Recognizer()
-    messages = []
+
+    # Set up the System Role
+    messages = [ {"role": "system", "content": "Summarise topic of the meeting in one word"} ]
 
     with sr.AudioFile(temp_audio_file) as source:
         audio_data = recogniser.record(source)
@@ -45,32 +38,34 @@ def audio_2_text(temp_audio_file):
 
 # Convert audio to text
 def convert_files(files):
+    messages = []
   
-  for file in files:
-    if file.endswith('4'):
-      video = mp.VideoFileClip(file)
-      audio = video.audio
-      temp_audio_file = "temp.wav"
-      audio.write_audiofile(temp_audio_file)
-      
-      text = audio_2_text(temp_audio_file) 
-      print(text)
-    else: 
-      text = audio_2_text(file) 
-      print(text)
-     
-
-print(convert_files(files))
+    for file in files:
+        if file.endswith('4'):
+            video = mp.VideoFileClip(file)
+            audio = video.audio
+            temp_audio_file = "temp.wav"
+            audio.write_audiofile(temp_audio_file)
+            text = audio_2_text(temp_audio_file) 
+            messages.extend(text)
+        else: 
+            text = audio_2_text(file) 
+            messages.extend(text)
+    return messages
 
 
-
-'''
 # Set up the model and send the user prompt
-response = client.chat.completions.create(
-  model="gpt-3.5-turbo",
-  messages= messages
-) 
+def generate_completion(input_data, model="gpt-3.5-turbo"):
 
-# Print the model output 
-print(response.choices[0].message)
-'''
+    # Send the messages to the GPT-3.5 model
+    response = client.chat.completions.create(
+      model="gpt-3.5-turbo",
+      messages= input_data
+    ) 
+
+    # Return the generated completion
+    return response.choices[0].message
+
+input_data = convert_files(files)
+response = generate_completion(input_data)
+print(response)'''
