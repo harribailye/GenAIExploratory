@@ -57,7 +57,7 @@ def generate_completion(input_data, model="gpt-3.5-turbo"):
     max_tokens = 10  # Set the maximum token limit for each completion
 
     # Set up the system role message and add to a new list combining input data and system message
-    system_message = {"role": "system", "content": "Summarise topic of the meeting in under 10 words"}
+    system_message = {"role": "system", "content": "Summarise topic of the lecture in under 10 words"}
     combined_data = input_data + [system_message]
 
     # Send the message to the GPT-3.5 model
