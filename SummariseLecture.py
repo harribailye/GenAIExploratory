@@ -11,7 +11,7 @@ import os
 
 # Set API key 
 client = OpenAI(
-    api_key="",
+    api_key="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",
 )
 
 # FUNCTION - Audio to text function 
@@ -36,7 +36,7 @@ def convert_files(file):
         if file.lower().endswith('.wav'): # Can convert wav files to text straight away 
             text = audio_2_text(file)
             messages.extend(text)
-        elif file.lower().endswith(('.mp4', '.mp3')): # have to to convert mp4 and mp3 before converting them to text 
+        elif file.lower().endswith(('.mp4', '.mp3', '.m4a')): # have to to convert mp4 and mp3 before converting them to text 
             video = mp.VideoFileClip(file) if file.lower().endswith(('.mp4')) else None
             audio = video.audio if video else mp.AudioFileClip(file)
             audio.write_audiofile(temp_audio_file)
@@ -54,10 +54,10 @@ def convert_files(file):
 # FUNCTION - Set up the model and send the text from the files
 def generate_completion(input_data, model="gpt-3.5-turbo"):
     completions = []
-    max_tokens = 10  # Set the maximum token limit for each completion
+    max_tokens = 50  # Set the maximum token limit for each completion
 
     # Set up the system role message and add to a new list combining input data and system message
-    system_message = {"role": "system", "content": "Summarise topic of the lecture in under 10 words"}
+    system_message = {"role": "system", "content": "Summarise topic of the lecture in dot points"}
     combined_data = input_data + [system_message]
 
     # Send the message to the GPT-3.5 model
@@ -76,7 +76,7 @@ def generate_completion(input_data, model="gpt-3.5-turbo"):
 
 # Get a list of audio/video files in TestData working directory 
 current_dir = os.path.join(os.getcwd(), "TestData")
-files = [file for file in os.listdir(current_dir) if (file.endswith('.MP4') or file.endswith('.wav') or file.endswith('.mp3')) and os.path.isfile(os.path.join(current_dir, file))]
+files = [file for file in os.listdir(current_dir) if (file.endswith('.MP4') or file.endswith('.wav') or file.endswith('.mp3') or file.endswith('.m4a')) and os.path.isfile(os.path.join(current_dir, file))]
 
 # Call the functions and print responses 
 for file in files:
