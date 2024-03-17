@@ -75,7 +75,7 @@ def generate_completion(input_data, model="gpt-3.5-turbo"):
 
 
 # Get a list of audio/video files in TestData working directory 
-current_dir = os.path.join(os.getcwd(), "Test")
+current_dir = os.path.join(os.getcwd(), "TestData")
 files = [file for file in os.listdir(current_dir) if (file.endswith('.MP4') or file.endswith('.wav') or file.endswith('.mp3') or file.endswith('.m4a')) and os.path.isfile(os.path.join(current_dir, file))]
 
 # Call the functions and print responses 
