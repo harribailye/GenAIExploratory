@@ -6,6 +6,7 @@
 # Import libaries 
 from openai import OpenAI
 import speech_recognition as sr 
+import pyaudio
 
 # Set API key 
 client = OpenAI(

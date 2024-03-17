@@ -11,7 +11,7 @@ import os
 
 # Set API key 
 client = OpenAI(
-    api_key="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",
+    api_key="",
 )
 
 # FUNCTION - Audio to text function 
@@ -75,7 +75,7 @@ def generate_completion(input_data, model="gpt-3.5-turbo"):
 
 
 # Get a list of audio/video files in TestData working directory 
-current_dir = os.path.join(os.getcwd(), "TestData")
+current_dir = os.path.join(os.getcwd(), "Test")
 files = [file for file in os.listdir(current_dir) if (file.endswith('.MP4') or file.endswith('.wav') or file.endswith('.mp3') or file.endswith('.m4a')) and os.path.isfile(os.path.join(current_dir, file))]
 
 # Call the functions and print responses 
