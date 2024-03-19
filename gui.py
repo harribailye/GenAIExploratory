@@ -3,12 +3,16 @@
 # Import libararies 
 import tkinter as tk
 import speech_recognition as sr
+import pyttsx3
 from openai import OpenAI
 
 # Set API key 
 client = OpenAI(
     api_key="",
 ) 
+
+# Initialize the text-to-speech engine
+engine = pyttsx3.init()
 
 def call_chatGPT(user_prompt):
     if user_prompt.strip() != "":
@@ -53,6 +57,11 @@ def audio_prompt():
         print("ChatGPT response:", chatGPT_response)
         # Insert ChatGPT response in lighter blue text
         text_area.insert(tk.END, "ChatGPT response: " + chatGPT_response + "\n\n", "light_blue")
+        
+        # Output ChatGPT response as audio if the audio output toggle is enabled
+        if audio_output_enabled.get():
+            engine.say(chatGPT_response)
+            engine.runAndWait()
 
     except sr.UnknownValueError:
         print('Could not understand audio. Please try again.')
@@ -71,6 +80,11 @@ def submit_prompt(event=None):
         print("ChatGPT response:", chatGPT_response)
         # Insert ChatGPT response in lighter blue text
         text_area.insert(tk.END, "ChatGPT response: " + chatGPT_response + "\n\n", "light_blue")
+
+        # Output ChatGPT response as audio if the audio output toggle is enabled
+        if audio_output_enabled.get():
+            engine.say(chatGPT_response)
+            engine.runAndWait()
 
         prompt_entry.delete(0, tk.END)  # Clear the entry widget after submitting the prompt
     else:
@@ -91,25 +105,34 @@ root.geometry("%dx%d+%d+%d" % (window_width, window_height, x_coordinate, y_coor
 # Set window background color
 root.configure(bg="black")
 
+# Initialize the variable to track the state of the audio output toggle
+audio_output_enabled = tk.BooleanVar()
+audio_output_enabled.set(False)  # By default, audio output is disabled
+
+
 # Audio Prompt Button
-audio_button = tk.Button(root, text="Audio Prompt", command=audio_prompt, font=("Arial", 14), bg="#4CAF50",
+audio_button = tk.Button(root, text="Audio Input", command=audio_prompt, font=("Arial", 14), bg="#4CAF50",
                          fg="white", padx=10, pady=5)
-audio_button.pack(side=tk.TOP, pady=5)
+audio_button.pack(side=tk.TOP, pady=10)
 
 # Label for the entry widget
-entry_label = tk.Label(root, text="Type your prompt here:", font=("Arial", 12), bg="black", fg="white", anchor="w")
-entry_label.pack(side=tk.TOP, pady=(10, 0), padx=10, fill='x')
+entry_label = tk.Label(root, text="  Type Your Input:", font=("Arial", 12), bg="black", fg="white", anchor="w")
+entry_label.pack(side=tk.TOP, pady=(10, 0), anchor = "w")
 
 # Entry widget for typing the prompt
 prompt_entry = tk.Entry(root, font=("Arial", 12))
 prompt_entry.pack(expand=False, fill="x", padx=10, pady=(0, 10))
 prompt_entry.bind("<Return>", submit_prompt)  # Bind Enter key to submit_prompt function
 
+# Toggle button to enable/disable audio output
+audio_output_toggle = tk.Checkbutton(root, text="Audio Output", variable=audio_output_enabled, font=("Arial", 12), bg="black", fg="white", selectcolor="black", activeforeground="white", activebackground="black")
+audio_output_toggle.pack(side=tk.TOP, pady=(10, 0), anchor = "w")
+
 # Text area for displaying prompts and responses
 text_area = tk.Text(root, font=("Arial", 12), wrap="word", bg="black", fg="white")
 text_area.pack(expand=True, fill="both", padx=10, pady=10)
 
-# Configure text colors for model output 
-text_area.tag_configure("light_blue", foreground="#ADD8E6") 
+# Configure text colors
+text_area.tag_configure("light_blue", foreground="#ADD8E6")
 
 root.mainloop()
