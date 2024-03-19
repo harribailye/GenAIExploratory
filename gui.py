@@ -7,7 +7,7 @@ from openai import OpenAI
 
 # Set API key 
 client = OpenAI(
-    api_key="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",
+    api_key="",
 ) 
 
 def call_chatGPT(user_prompt):
