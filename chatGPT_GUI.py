@@ -8,7 +8,7 @@ from openai import OpenAI
 
 # Set API key 
 client = OpenAI(
-    api_key="",
+    api_key="t",
 ) 
 
 # Initialize the text-to-speech engine
