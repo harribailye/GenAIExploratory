@@ -8,7 +8,7 @@ from openai import OpenAI
 
 # Set API key 
 client = OpenAI(
-    api_key="t",
+    api_key="",
 ) 
 
 # Initialize the text-to-speech engine
@@ -49,7 +49,7 @@ def audio_prompt():
     try:
         user_prompt = recognizer.recognize_google(audio)
         print(f"This is your ChatGPT Prompt: {user_prompt}")
-        text_area.insert(tk.END, "Your prompt (from audio): " + user_prompt + "\n", "white")  # Insert user prompt in white text
+        text_area.insert(tk.END, "Your prompt (speech): " + user_prompt + "\n", "white")  # Insert user prompt in white text
 
         # Call the function to interact with ChatGPT
         chatGPT_response = call_chatGPT(user_prompt)
@@ -91,7 +91,7 @@ def submit_prompt(event=None):
         print("Please enter a prompt.")
 
 root = tk.Tk()
-root.title("ChatGPT Prompt")
+root.title("ChatGPT User Interface")
 
 # Set window size and position
 window_width = 600
@@ -105,15 +105,18 @@ root.geometry("%dx%d+%d+%d" % (window_width, window_height, x_coordinate, y_coor
 # Set window background color
 root.configure(bg="black")
 
+# Title Label
+title_label = tk.Label(root, text="ChatGPT User Interface", font=("Arial", 20, "bold"), bg = "black", fg="#ADD8E6")
+title_label.pack(side=tk.TOP, pady=10)
+
 # Initialize the variable to track the state of the audio output toggle
 audio_output_enabled = tk.BooleanVar()
 audio_output_enabled.set(False)  # By default, audio output is disabled
 
-
 # Audio Prompt Button
-audio_button = tk.Button(root, text="Audio Input", command=audio_prompt, font=("Arial", 14), bg="#4CAF50",
-                         fg="white", padx=10, pady=5)
-audio_button.pack(side=tk.TOP, pady=10)
+audio_button = tk.Button(root, text="Audio Input", command=audio_prompt, font=("Arial", 12), bg="#4CAF50",
+                         fg="white", padx=5, pady=2)
+audio_button.pack(side=tk.TOP, padx=10, pady=(10, 0), anchor="w")
 
 # Label for the entry widget
 entry_label = tk.Label(root, text="  Type Your Input:", font=("Arial", 12), bg="black", fg="white", anchor="w")
